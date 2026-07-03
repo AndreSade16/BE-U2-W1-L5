@@ -8,6 +8,8 @@ import com.github.javafaker.Faker;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class WorkstationService {
@@ -24,5 +26,10 @@ public class WorkstationService {
 
     public List<Workstation> findAll() {
         return workstationRepository.findAll();
+    }
+
+    public Workstation findById(String workstationId) {
+        Optional<Workstation> result = workstationRepository.findById(UUID.fromString(workstationId));
+        return result.orElseThrow();
     }
 }

@@ -2,10 +2,13 @@ package andreasaderi.L5.services;
 
 import andreasaderi.L5.entities.User;
 import andreasaderi.L5.exceptions.UserAlreadyExistsException;
+import andreasaderi.L5.exceptions.UserNotFoundException;
 import andreasaderi.L5.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
 
 @Service
 public class UserService {
@@ -26,5 +29,10 @@ public class UserService {
 
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    public User findById(String userId) {
+        Optional<User> result = userRepository.findById(UUID.fromString(userId));
+        return result.orElseThrow(() -> new UserNotFoundException(userId));
     }
 }

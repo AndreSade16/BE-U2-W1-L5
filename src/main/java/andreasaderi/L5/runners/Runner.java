@@ -4,9 +4,7 @@ import andreasaderi.L5.entities.Building;
 import andreasaderi.L5.entities.User;
 import andreasaderi.L5.entities.Workstation;
 import andreasaderi.L5.enums.WorkstationType;
-import andreasaderi.L5.exceptions.BuildingAlreadyExistsException;
-import andreasaderi.L5.exceptions.UserAlreadyExistsException;
-import andreasaderi.L5.exceptions.WorkstationAlreadyBookedException;
+import andreasaderi.L5.exceptions.*;
 import andreasaderi.L5.services.BuildingService;
 import andreasaderi.L5.services.ReservationService;
 import andreasaderi.L5.services.UserService;
@@ -15,6 +13,7 @@ import com.github.javafaker.Faker;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
 import java.util.Random;
@@ -41,7 +40,7 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-
+        
         //region        POPOLAMENTO AUTOMATICO DEL DB
         try {
             if (buildingService.findAll().isEmpty()) {
@@ -94,10 +93,28 @@ public class Runner implements CommandLineRunner {
         } catch (WorkstationAlreadyBookedException ex) {
             System.out.println(ex.getMessage());
         }
-
-
 //endregion
 
+        // region           TESTING
+        User userFromDb = null;
+        try {
+            userFromDb = userService.findById("eb9a93db-9c92-428d-9231-c034664e315b");
+        } catch (UserNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        Workstation workstationFromDb = null;
+        try {
+            workstationFromDb = workstationService.findById("01a47740-181a-402b-bb91-da07a98406dc");
+        } catch (WorkstationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            reservationService.saveReservation(userFromDb, workstationFromDb, LocalDate.of(2026, 10, 11));
+        } catch (WorkstationAlreadyBookedException | UserAlreadyHasReservationThatDayException ex) {
+            System.out.println(ex.getMessage());
+        }
+//endregion
 
     }
 }
