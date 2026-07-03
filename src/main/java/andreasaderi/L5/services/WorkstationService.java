@@ -3,6 +3,7 @@ package andreasaderi.L5.services;
 import andreasaderi.L5.entities.Building;
 import andreasaderi.L5.entities.Workstation;
 import andreasaderi.L5.enums.WorkstationType;
+import andreasaderi.L5.exceptions.RequiredFieldIsNullException;
 import andreasaderi.L5.repositories.WorkstationRepository;
 import com.github.javafaker.Faker;
 import org.springframework.stereotype.Service;
@@ -21,6 +22,9 @@ public class WorkstationService {
     }
 
     public void saveWorkstation(String description, WorkstationType workstationType, int maxOccupancy, Building building) {
+        if (workstationType == null) throw new RequiredFieldIsNullException("Workstation type can't be null");
+        if (maxOccupancy < 1) throw new RequiredFieldIsNullException("Max occupancy can't be less than 1");
+        if (building == null) throw new RequiredFieldIsNullException("Building can't be null");
         workstationRepository.save(new Workstation(description, workstationType, maxOccupancy, building));
     }
 

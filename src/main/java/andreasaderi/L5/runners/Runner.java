@@ -1,6 +1,7 @@
 package andreasaderi.L5.runners;
 
 import andreasaderi.L5.entities.Building;
+import andreasaderi.L5.entities.Reservation;
 import andreasaderi.L5.entities.User;
 import andreasaderi.L5.entities.Workstation;
 import andreasaderi.L5.enums.WorkstationType;
@@ -40,12 +41,12 @@ public class Runner implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        
+
         //region        POPOLAMENTO AUTOMATICO DEL DB
         try {
             if (buildingService.findAll().isEmpty()) {
                 for (int i = 0; i < 20; i++) {
-                    buildingService.saveBuilding(new Building(faker.gameOfThrones().house(), faker.address().streetAddress(), faker.address().city()));
+                    buildingService.saveBuilding(faker.gameOfThrones().house(), faker.address().streetAddress(), faker.address().city());
                 }
             }
         } catch (BuildingAlreadyExistsException ex) {
@@ -114,6 +115,37 @@ public class Runner implements CommandLineRunner {
         } catch (WorkstationAlreadyBookedException | UserAlreadyHasReservationThatDayException ex) {
             System.out.println(ex.getMessage());
         }
+
+        try {
+            buildingService.saveBuilding("ciaone", null, null);
+        } catch (RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            userService.findById("d345a6a2-dc78-4d68-a3e8-ac3892de012a");
+        } catch (UserNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            userService.saveUser(" ", "ciaone");
+        } catch (RequiredFieldIsNullException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            workstationService.saveWorkstation(null, null, 0, null);
+        } catch (RequiredFieldIsNullException ex) {
+            System.out.println(ex.getMessage());
+        }
+
+        try {
+            Reservation reservationFromDb = reservationService.findById("d345a6a2-dc78-4d68-a3e8-ac3892de012b");
+        } catch (ReservationNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+
 //endregion
 
     }
