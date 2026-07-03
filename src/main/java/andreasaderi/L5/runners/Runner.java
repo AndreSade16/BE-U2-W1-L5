@@ -146,6 +146,12 @@ public class Runner implements CommandLineRunner {
             System.out.println(ex.getMessage());
         }
 
+        try {
+            System.out.println(workstationService.findByTypeAndBuildingCity(WorkstationType.PRIVATE, "Settimo romolo ligure"));
+        } catch (RuntimeException ex) {
+            System.out.println(ex.getMessage());
+        }
+
 //endregion
 
     }

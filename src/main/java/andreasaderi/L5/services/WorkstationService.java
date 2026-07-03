@@ -36,4 +36,13 @@ public class WorkstationService {
         Optional<Workstation> result = workstationRepository.findById(UUID.fromString(workstationId));
         return result.orElseThrow();
     }
+
+    public List<Workstation> findByTypeAndBuildingCity(WorkstationType type, String city) {
+        if (city == null) throw new RequiredFieldIsNullException("City field can't be null");
+        if (city.isBlank()) throw new RequiredFieldIsNullException("City field can't be blank");
+        List<Workstation> result = workstationRepository.findByTypeAndBuildingCityIgnoreCase(type, city);
+        if (result.isEmpty()) throw new RuntimeException("No workstation with type " + type + " found in " + city);
+        return result;
+    }
+
 }
